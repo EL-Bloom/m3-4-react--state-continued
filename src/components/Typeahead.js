@@ -11,7 +11,9 @@ const Typeahead = ({ suggestions, handleSelect }) => {
     const lowerCaseTitle = suggestion.title.toLowerCase();
     const lowerCaseValue = value.toLowerCase();
     const isIncluded = lowerCaseTitle.includes(lowerCaseValue);
-    const moreThanTwoChars = value.length >= 2;
+    const moreThanTwoChars = value.length >= 2; 
+    const firstHalf= value.length <= 2;
+    const secondHalf= value.lenght > 2;
     return isIncluded && moreThanTwoChars;
   });
   console.log("matchedSuggestions", matchedSuggestions);
@@ -45,19 +47,30 @@ const Typeahead = ({ suggestions, handleSelect }) => {
 const Maindiv = styled.div`
   display: flex;
   flex-direction: column;
-
-  margin-top: 20px;
+  margin-top: 20px; 
+  margin-left:10px; 
+  
 `;
 const SearchDiv = styled.div`
-  display: flex;
+  display: flex; 
+  width:400px; 
+  width:500px;
 `;
-const ListDiv = styled.div`
+const ListDiv = styled.div` 
   padding: 10px;
 `;
-const List = styled.ul``;
-
+const List = styled.ul` 
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+width:300px;  
+border: 1px solid lightgrey; 
+border-radius:5px;
+`;
 const Item = styled.li`
-  display: block;
+  padding:5px; 
+
+  &:hover { 
+    background-color:#FFFFE0;
+  }
 `;
 const Button = styled.button`
   background-color: blue;
@@ -75,7 +88,7 @@ const Input = styled.input`
   display: flex;
   justify-content: center;
   height: 40px;
-  width: 250px;
+  width: 300px;
   border-radius: 10px;
   border: solid 2px lightgrey;
   font-size: 120%;

@@ -2,21 +2,22 @@ import React from "react";
 import data from "../data";
 import { useState } from "react";
 import styled from "styled-components";
+import Suggestion from "./Suggestion";
 
-const Typeahead = ({ suggestions, handleSelect }) => {
+const Typeahead = (props) => {
+  const { suggestions, handleSelect, categories } = props;
   const [value, setValue] = useState("");
   console.log(suggestions);
 
-  const matchedSuggestions = suggestions.filter((suggestion) => {
+  const matches = suggestions.filter((suggestion) => {
     const lowerCaseTitle = suggestion.title.toLowerCase();
     const lowerCaseValue = value.toLowerCase();
     const isIncluded = lowerCaseTitle.includes(lowerCaseValue);
-    const moreThanTwoChars = value.length >= 2; 
-    const firstHalf= value.length <= 2;
-    const secondHalf= value.lenght > 2;
+    const moreThanTwoChars = value.length >= 2;
+
     return isIncluded && moreThanTwoChars;
   });
-  console.log("matchedSuggestions", matchedSuggestions);
+  console.log("matches", matches);
 
   return (
     <Maindiv>
@@ -24,6 +25,7 @@ const Typeahead = ({ suggestions, handleSelect }) => {
         <Input
           type="text"
           value={value}
+          placeholder="Search..."
           onChange={(ev) => setValue(ev.target.value)}
           onKeyDown={(ev) => {
             if (ev.key === "Enter") {
@@ -33,13 +35,27 @@ const Typeahead = ({ suggestions, handleSelect }) => {
         />
         <Button onClick={() => setValue("")}> Clear</Button>
       </SearchDiv>
-      <ListDiv>
-        <List>
-          {matchedSuggestions.map((match) => {
-            return <Item>{match.title} </Item>;
-          })}
-        </List>
-      </ListDiv>
+      {matches.length > 0 && (
+        <ListDiv>
+          
+            {matches.map((match) => {
+              const category = categories[match.categoryId];
+
+              return (
+                <Suggestion
+                  key={match.id}
+                  category={category}
+                  suggestion={match.title}
+                  searchTerm={value}
+                  onClick={() => {
+                    handleSelect(match.title);
+                  }}
+                />
+              );
+            })}
+          
+        </ListDiv>
+      )}
     </Maindiv>
   );
 };
@@ -47,31 +63,24 @@ const Typeahead = ({ suggestions, handleSelect }) => {
 const Maindiv = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 20px; 
-  margin-left:10px; 
-  
+  margin-top: 20px;
+  margin-left: 10px;
 `;
 const SearchDiv = styled.div`
-  display: flex; 
-  width:400px; 
-  width:500px;
+  display: flex;
+  width: 400px;
+  width: 500px;
 `;
-const ListDiv = styled.div` 
+const ListDiv = styled.div`
   padding: 10px;
 `;
-const List = styled.ul` 
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-width:300px;  
-border: 1px solid lightgrey; 
-border-radius:5px;
+const List = styled.ul`
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  width: 300px;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
 `;
-const Item = styled.li`
-  padding:5px; 
 
-  &:hover { 
-    background-color:#FFFFE0;
-  }
-`;
 const Button = styled.button`
   background-color: blue;
   color: white;
